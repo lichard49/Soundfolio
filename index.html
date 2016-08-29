@@ -1308,6 +1308,19 @@ iframe.iframecontentFLFTFY{
 <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
 <script>
 
+var numSoundcloudReturned = 0;
+function checkSoundcloudInit() {
+  numSoundcloudReturned += 1;
+  if(numSoundcloudReturned == 5) {
+        // AJAX requests to generate graph
+        var my_awesome_script = document.createElement('script');
+        my_awesome_script.setAttribute('src','./Stackfolio _ Bankers\' Bank _ Scorecard_files/dash-all-codekitminified.js');
+        document.head.appendChild(my_awesome_script);
+
+        console.log('SoundCloud is done loading data');
+  }
+}
+
 // uploads
 var template_context_capitalAssetValues; // = [14, 16, 14, 16, 14, 16];
 var template_context_minCapitalAssetScale; // = 13.91;
@@ -1318,8 +1331,10 @@ var template_context_capitalAssetStepWidth; // = 1;
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
       });
-      // var user = 'phortissimo';
-      var user = 'erikdfranklin';
+      var user = 'phortissimo';
+      // var user = 'erikdfranklin';
+
+      // === 1. get tracks ===
       SC.get('/users/' + user + '/tracks').then(function(tracks) {
         
         template_context_capitalAssetValues = [0, 0, 0, 0, 0, 0];
@@ -1346,6 +1361,7 @@ var template_context_capitalAssetStepWidth; // = 1;
         max += 1;
         template_context_capitalAssetStepWidth = (max - template_context_minCapitalAssetScale)/template_context_capitalAssetScaleNumSteps;
 
+        // calculate percent of current year
         var percentIncrease = (template_context_capitalAssetValues[5] - template_context_capitalAssetValues[4]) / parseFloat(template_context_capitalAssetValues[4]) * 100;
         $('#upload-percent').text(percentIncrease.toFixed(2) + '%');
         if(percentIncrease < 0) {
@@ -1353,17 +1369,16 @@ var template_context_capitalAssetStepWidth; // = 1;
         } else {
           $('#upload-trend').addClass('fa-arrow-up');
         }
-        console.log(percentIncrease);
 
-        // AJAX requests to generate graph
-        // TODO do this at the end of all of the data collection
-        var my_awesome_script = document.createElement('script');
-        my_awesome_script.setAttribute('src','./Stackfolio _ Bankers\' Bank _ Scorecard_files/dash-all-codekitminified.js');
-        document.head.appendChild(my_awesome_script);
+        checkSoundcloudInit()
       });
+
+      // === 2. playlists ===
       SC.get('/users/' + user + '/playlists').then(function(playlists) {
         console.log('playlists');
         console.log(playlists);
+
+        checkSoundcloudInit()
       });
       /*
       // 503 service not available
@@ -1376,17 +1391,29 @@ var template_context_capitalAssetStepWidth; // = 1;
         console.log(followers);
       });
       */
+
+      // === 3. comments === 
       SC.get('/users/' + user + '/comments').then(function(comments) {
         console.log('comments');
         console.log(comments);
+
+        checkSoundcloudInit()
       });
+
+      // === 4. favorites ===
       SC.get('/users/' + user + '/favorites').then(function(favorites) {
         console.log('favorites');
         console.log(favorites);
+
+        checkSoundcloudInit()
       });
+
+      // === 5. web-profiles ===
       SC.get('/users/' + user + '/web-profiles').then(function(webprofiles) {
         console.log('web-profiles');
         console.log(webprofiles);
+
+        checkSoundcloudInit()
       });
 
 
