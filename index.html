@@ -1064,7 +1064,7 @@ iframe.iframecontentFLFTFY{
           </div>
           <div class="medium-4 columns">
             <h5 id="capitalAssetSummary">
-              <small>Total Uploads:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$64,894,000.00</small>
+              <small>Total Uploads:<br></small><small id="total-uploads" class="capitalAssetSummaryNumber makeItGreen">$64,894,000.00</small>
               <!-- <small>Total Assets:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$466,219,000.00</small> -->
             </h5>
           </div>
@@ -1319,6 +1319,7 @@ var template_context_loanDepositStepWidth;
             genres[genre] += 1;
           }
         }
+        $('#total-uploads').text(tracks.length);
 
         // set bounds on graph
         template_context_minCapitalAssetScale -= 2;
