@@ -1292,7 +1292,7 @@ var template_context_assetAllocationMix_assetMixDictionary = [];
           }
 
           // bin all the genres
-          var genre = tracks[index].genre;
+          var genre = tracks[index].genre.toLowerCase();
           if(!genres[genre]) {
             genres[genre] = 1;
             numGenres += 1.0;
@@ -1321,15 +1321,18 @@ var template_context_assetAllocationMix_assetMixDictionary = [];
         // populate genre
         var index = 0;
         for(g in genres) {
+          var percentage = (genres[g]/numGenres*100).toFixed(2);
+
           template_context_assetMixDetails_mixLabels.push(g);
-          template_context_assetMixDetails_mixValues.push(genres[g]/numGenres*100);
+          template_context_assetMixDetails_mixValues.push(percentage);
           template_context_assetMixDetails_mixColors.push(colors[index]);
-          index += 1;
-          template_context_assetAllocationMix_assetMixDictionary[g] = genres[g]/numGenres*100;
+          template_context_assetAllocationMix_assetMixDictionary[g] = percentage;
 
           template_context_assetAllocationMix_mixLabels.push(g);
-          template_context_assetAllocationMix_mixValues.push(genres[g]/numGenres*100);
+          template_context_assetAllocationMix_mixValues.push(percentage);
           template_context_assetAllocationMix_mixColors.push(colors[index]);
+
+          index += 1;
 
         }
         console.log("genres");
