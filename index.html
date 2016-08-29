@@ -694,95 +694,19 @@ iframe.iframecontentFLFTFY{
 <div id="asset_mix_details" class="modal reveal-modal" data-reveal="">
   <div class="row search">
     <div class="small-12 columns modal_header">
-      <h2>Loan Asset Mix Details</h2>
+      <h2>Genre Distribution</h2>
     </div>
   </div>
   <div class="row asset_graph">
-    <div class="large-6 medium-7 small-12 columns">
+    <div class="large-12 medium-12 small-12 columns">
       <h3 class="inset-text" id="no-asset-mix-modal" align="center" style="">No Loan Asset Mix Available</h3>
       <div class="canvas-holder donut">
         <canvas id="canvas-asset-allocation-mix-2" width="400" height="400"></canvas>
       </div>
       <div id="chartjs-tooltip-loan-asset-modal" class="chartjs-custom-tooltip"></div>
     </div>
-    <div class="large-6 medium-5 small-12 columns">
-      
-      <div class="legend_object">
-        <div class="circle" style="background:#F7464A;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Misc. Loans - 40.567% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#97b6b5;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Non-Farm Non-Residential Real Estate - 18.745% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#5a91c0;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Lease Financing Receivables - 17.239% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#F9BF3B;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Owner Occupied Non-Farm Non-Residential Real Estate - 6.845% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#3498DB;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Other Construct. + Land Dev. - 3.605% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#d18770;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> 1-4 Family Residential - 3.264% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#DB0A5B;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Loans to Individuals - 2.886% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#663399;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Multifamily Real Estate - 2.238% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#FDB45C;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Commercial + Industrial Loans - 2.231% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#b58eae;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Agricultural Loans - 1.223% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#2ECC71;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Farmland Real Estate - 0.717% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#4ECDC4;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Municipal Loans - 0.441% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#46BFBD;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> 1-4 Family Construction - 0.0% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#F22613;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Financial Institution Loans - 0.0% </p>
-      </div>
-       
-      <div class="legend_object">
-        <div class="circle" style="background:#87D37C;" id="legend1"></div>
-        <p class="asset-mix-details-legend"> Foreign Loans + Leases - 0.0% </p>
-      </div>
-       
-    </div>
+
+
   </div>
   <a class="close-reveal-modal">×</a>
 </div>
@@ -1113,7 +1037,7 @@ iframe.iframecontentFLFTFY{
       <div id="asset_mix_card" class="panel chart" data-reveal-id="asset_mix_details">
         <div class="row">
           <div class="medium-8 columns">
-            <h5>Loan Asset Mix<small>Click To Explore</small></h5>
+            <h5>Genre Distribution<small>Click To Explore</small></h5>
           </div>
           <div class="medium-4 columns">
             <i class="right fa fa-angle-double-right" style="font-size: 2em;" aria-hidden="true"></i>
@@ -1327,6 +1251,16 @@ var template_context_minCapitalAssetScale; // = 13.91;
 var template_context_capitalAssetScaleNumSteps; // = 10.0;
 var template_context_capitalAssetStepWidth; // = 1;
 
+// genres
+var template_context_assetMixDetails_mixLabels = [];
+var template_context_assetMixDetails_mixValues = [];
+var template_context_assetMixDetails_mixColors = [];
+
+var template_context_assetAllocationMix_mixLabels = [];
+var template_context_assetAllocationMix_mixValues = [];
+var template_context_assetAllocationMix_mixColors = [];
+var template_context_assetAllocationMix_assetMixDictionary = [];
+
       SC.initialize({
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
@@ -1341,8 +1275,11 @@ var template_context_capitalAssetStepWidth; // = 1;
         template_context_minCapitalAssetScale = Infinity;
         max = -Infinity;
 
-        // bin all the years
+        genres = {};
+        var numGenres = 0.0;
+
         for(index in tracks) {
+          // bin all the years
           var trackDate = tracks[index].created_at;
           var trackYear = parseInt(trackDate.split('/')[0]);
           var binIndex = Math.max(0, trackYear-2011);
@@ -1352,6 +1289,15 @@ var template_context_capitalAssetStepWidth; // = 1;
           }
           if(template_context_capitalAssetValues[binIndex] > max) {
             max = template_context_capitalAssetValues[binIndex];
+          }
+
+          // bin all the genres
+          var genre = tracks[index].genre;
+          if(!genres[genre]) {
+            genres[genre] = 1;
+            numGenres += 1.0;
+          } else {
+            genres[genre] += 1;
           }
         }
 
@@ -1369,6 +1315,29 @@ var template_context_capitalAssetStepWidth; // = 1;
         } else {
           $('#upload-trend').addClass('fa-arrow-up');
         }
+
+        var colors = [['#F7464A','#FF5A5E'],  ['#97b6b5','#97b6b0'],  ['#5a91c0','#5a91c5'],  ['#F9BF3B','#F5AB35'],  ['#3498DB','#22A7F0'],  ['#d18770','#d18775'],  ['#DB0A5B','#D2527F'],  ['#663399','#674172'],  ['#FDB45C','#FFC870'],  ['#b58eae','#b58ea0'],  ['#2ECC71','#3FC380'],  ['#4ECDC4','#A2DED0'],  ['#46BFBD','#5AD3D1'],  ['#F22613','#D24D57'],  ['#87D37C','#90C695']];
+
+        // populate genre
+        var index = 0;
+        for(g in genres) {
+          template_context_assetMixDetails_mixLabels.push(g);
+          template_context_assetMixDetails_mixValues.push(genres[g]/numGenres*100);
+          template_context_assetMixDetails_mixColors.push(colors[index]);
+          index += 1;
+          template_context_assetAllocationMix_assetMixDictionary[g] = genres[g]/numGenres*100;
+
+          template_context_assetAllocationMix_mixLabels.push(g);
+          template_context_assetAllocationMix_mixValues.push(genres[g]/numGenres*100);
+          template_context_assetAllocationMix_mixColors.push(colors[index]);
+
+        }
+        console.log("genres");
+        console.log(template_context_assetMixDetails_mixLabels);
+        console.log(template_context_assetMixDetails_mixValues);
+        console.log(template_context_assetMixDetails_mixColors);
+
+        console.log(tracks);
 
         checkSoundcloudInit()
       });
@@ -1421,9 +1390,11 @@ var template_context_idrssd = 408642;
 var template_context_netInterestIncomeBank = [1.0601, 0.9757, 1.0669, 1.0906, 1.0838, 1.3245];
 var template_context_nonInterestExpenseBank = [4.7466, 4.7567, 4.8683, 4.9555, 4.734, 4.6149];
 var template_context_nonInterestIncomeBank = [4.4117, 4.6126, 4.6868, 4.7452, 4.505, 4.6735];
+
+// loans
 var template_context_loanValues = [63478000.0, 65346000.0, 68730000.0, 76046000.0, 82353000.0, 97561000.0];
 var template_context_coreDepositValues = [231288000.0, 206882000.0, 206707000.0, 227218000.0, 278600000.0, 289884000.0];
-var template_context_depositValues = [232288000.0, 207382000.0, 207457000.0, 227719000.0, 279100000.0, 291384000.0];
+var template_context_depositValues = [0,0,0,0,0,0];
 var template_context_minLoanDepositScale = 6501500.0;
 var template_context_loanDepositScaleNumSteps = 6.0;
 var template_context_loanDepositStepWidth = 56976500.0;
@@ -1438,158 +1409,11 @@ var template_context_URL_getAllDatesURL = "/getAllDates/";
 var template_context_URL_getAveragesOverDateRangeByPeerGroup = "/getAveragesOverDateRangeByPeerGroup/";
 var template_context_URL_getUBPRCategoryFromConcept = "/getUBPRCategoryFromConcept/";
 
-// 
-var template_context_assetMixDetails_mixLabels = [];
-var template_context_assetMixDetails_mixValues = [];
-var template_context_assetMixDetails_mixColors = [];
-
-  template_context_assetMixDetails_mixLabels.push('Misc. Loans');
-  template_context_assetMixDetails_mixValues.push(40.567);
-  template_context_assetMixDetails_mixColors.push(['#F7464A','#FF5A5E'])
-
-  template_context_assetMixDetails_mixLabels.push('Non-Farm Non-Residential Real Estate');
-  template_context_assetMixDetails_mixValues.push(18.745);
-  template_context_assetMixDetails_mixColors.push(['#97b6b5','#97b6b0'])
-
-  template_context_assetMixDetails_mixLabels.push('Lease Financing Receivables');
-  template_context_assetMixDetails_mixValues.push(17.239);
-  template_context_assetMixDetails_mixColors.push(['#5a91c0','#5a91c5'])
-
-  template_context_assetMixDetails_mixLabels.push('Owner Occupied Non-Farm Non-Residential Real Estate');
-  template_context_assetMixDetails_mixValues.push(6.845);
-  template_context_assetMixDetails_mixColors.push(['#F9BF3B','#F5AB35'])
-
-  template_context_assetMixDetails_mixLabels.push('Other Construct. + Land Dev.');
-  template_context_assetMixDetails_mixValues.push(3.605);
-  template_context_assetMixDetails_mixColors.push(['#3498DB','#22A7F0'])
-
-  template_context_assetMixDetails_mixLabels.push('1-4 Family Residential');
-  template_context_assetMixDetails_mixValues.push(3.264);
-  template_context_assetMixDetails_mixColors.push(['#d18770','#d18775'])
-
-  template_context_assetMixDetails_mixLabels.push('Loans to Individuals');
-  template_context_assetMixDetails_mixValues.push(2.886);
-  template_context_assetMixDetails_mixColors.push(['#DB0A5B','#D2527F'])
-
-  template_context_assetMixDetails_mixLabels.push('Multifamily Real Estate');
-  template_context_assetMixDetails_mixValues.push(2.238);
-  template_context_assetMixDetails_mixColors.push(['#663399','#674172'])
-
-  template_context_assetMixDetails_mixLabels.push('Commercial + Industrial Loans');
-  template_context_assetMixDetails_mixValues.push(2.231);
-  template_context_assetMixDetails_mixColors.push(['#FDB45C','#FFC870'])
-
-  template_context_assetMixDetails_mixLabels.push('Agricultural Loans');
-  template_context_assetMixDetails_mixValues.push(1.223);
-  template_context_assetMixDetails_mixColors.push(['#b58eae','#b58ea0'])
-
-  template_context_assetMixDetails_mixLabels.push('Farmland Real Estate');
-  template_context_assetMixDetails_mixValues.push(0.717);
-  template_context_assetMixDetails_mixColors.push(['#2ECC71','#3FC380'])
-
-  template_context_assetMixDetails_mixLabels.push('Municipal Loans');
-  template_context_assetMixDetails_mixValues.push(0.441);
-  template_context_assetMixDetails_mixColors.push(['#4ECDC4','#A2DED0'])
-
-  template_context_assetMixDetails_mixLabels.push('1-4 Family Construction');
-  template_context_assetMixDetails_mixValues.push(0.0);
-  template_context_assetMixDetails_mixColors.push(['#46BFBD','#5AD3D1'])
-
-  template_context_assetMixDetails_mixLabels.push('Financial Institution Loans');
-  template_context_assetMixDetails_mixValues.push(0.0);
-  template_context_assetMixDetails_mixColors.push(['#F22613','#D24D57'])
-
-  template_context_assetMixDetails_mixLabels.push('Foreign Loans + Leases');
-  template_context_assetMixDetails_mixValues.push(0.0);
-  template_context_assetMixDetails_mixColors.push(['#87D37C','#90C695'])
-
 
 var template_context_twoDataSetsOfNull = [[null,null,null,null,null,null,],[null,null,null,null,null,null,]];
 var template_context_datesForGraphs = ['pre-2011', '2012', '2013', '2014', '2015', '2016']; //['2014-12-31','2015-03-31','2015-06-30','2015-09-30','2015-12-31','2016-03-31',];
 var template_context_comparisonConcepts = ['UBPRD486','UBPR3792','UBPRE542','UBPRE019','UBPRE018','UBPRK447','UBPRE013','UBPRE001','UBPRE005','UBPRE004','UBPRE641','UBPRE025','UBPRE599','UBPRE027','UBPRE592','UBPRE091','UBPRD486','UBPRD488','UBPRE018','UBPRE415','UBPRE542','UBPRE644','UBPR3210','UBPR3792','UBPRD487','STACK0001',];
 var template_context_noLabels = ['','','','','','',];
-
-// 
-var template_context_assetAllocationMix_mixLabels = [];
-var template_context_assetAllocationMix_mixValues = [];
-var template_context_assetAllocationMix_mixColors = [];
-var template_context_assetAllocationMix_assetMixDictionary = [];
-
-  template_context_assetAllocationMix_assetMixDictionary['Misc. Loans'] = 40.567;
-  template_context_assetAllocationMix_mixLabels.push('Misc. Loans');
-  template_context_assetAllocationMix_mixValues.push(40.567);
-  template_context_assetAllocationMix_mixColors.push(['#F7464A','#FF5A5E'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Non-Farm Non-Residential Real Estate'] = 18.745;
-  template_context_assetAllocationMix_mixLabels.push('Non-Farm Non-Residential Real Estate');
-  template_context_assetAllocationMix_mixValues.push(18.745);
-  template_context_assetAllocationMix_mixColors.push(['#97b6b5','#97b6b0'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Lease Financing Receivables'] = 17.239;
-  template_context_assetAllocationMix_mixLabels.push('Lease Financing Receivables');
-  template_context_assetAllocationMix_mixValues.push(17.239);
-  template_context_assetAllocationMix_mixColors.push(['#5a91c0','#5a91c5'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Owner Occupied Non-Farm Non-Residential Real Estate'] = 6.845;
-  template_context_assetAllocationMix_mixLabels.push('Owner Occupied Non-Farm Non-Residential Real Estate');
-  template_context_assetAllocationMix_mixValues.push(6.845);
-  template_context_assetAllocationMix_mixColors.push(['#F9BF3B','#F5AB35'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Other Construct. + Land Dev.'] = 3.605;
-  template_context_assetAllocationMix_mixLabels.push('Other Construct. + Land Dev.');
-  template_context_assetAllocationMix_mixValues.push(3.605);
-  template_context_assetAllocationMix_mixColors.push(['#3498DB','#22A7F0'])
-
-  template_context_assetAllocationMix_assetMixDictionary['1-4 Family Residential'] = 3.264;
-  template_context_assetAllocationMix_mixLabels.push('1-4 Family Residential');
-  template_context_assetAllocationMix_mixValues.push(3.264);
-  template_context_assetAllocationMix_mixColors.push(['#d18770','#d18775'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Loans to Individuals'] = 2.886;
-  template_context_assetAllocationMix_mixLabels.push('Loans to Individuals');
-  template_context_assetAllocationMix_mixValues.push(2.886);
-  template_context_assetAllocationMix_mixColors.push(['#DB0A5B','#D2527F'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Multifamily Real Estate'] = 2.238;
-  template_context_assetAllocationMix_mixLabels.push('Multifamily Real Estate');
-  template_context_assetAllocationMix_mixValues.push(2.238);
-  template_context_assetAllocationMix_mixColors.push(['#663399','#674172'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Commercial + Industrial Loans'] = 2.231;
-  template_context_assetAllocationMix_mixLabels.push('Commercial + Industrial Loans');
-  template_context_assetAllocationMix_mixValues.push(2.231);
-  template_context_assetAllocationMix_mixColors.push(['#FDB45C','#FFC870'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Agricultural Loans'] = 1.223;
-  template_context_assetAllocationMix_mixLabels.push('Agricultural Loans');
-  template_context_assetAllocationMix_mixValues.push(1.223);
-  template_context_assetAllocationMix_mixColors.push(['#b58eae','#b58ea0'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Farmland Real Estate'] = 0.717;
-  template_context_assetAllocationMix_mixLabels.push('Farmland Real Estate');
-  template_context_assetAllocationMix_mixValues.push(0.717);
-  template_context_assetAllocationMix_mixColors.push(['#2ECC71','#3FC380'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Municipal Loans'] = 0.441;
-  template_context_assetAllocationMix_mixLabels.push('Municipal Loans');
-  template_context_assetAllocationMix_mixValues.push(0.441);
-  template_context_assetAllocationMix_mixColors.push(['#4ECDC4','#A2DED0'])
-
-  template_context_assetAllocationMix_assetMixDictionary['1-4 Family Construction'] = 0.0;
-  template_context_assetAllocationMix_mixLabels.push('1-4 Family Construction');
-  template_context_assetAllocationMix_mixValues.push(0.0);
-  template_context_assetAllocationMix_mixColors.push(['#46BFBD','#5AD3D1'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Financial Institution Loans'] = 0.0;
-  template_context_assetAllocationMix_mixLabels.push('Financial Institution Loans');
-  template_context_assetAllocationMix_mixValues.push(0.0);
-  template_context_assetAllocationMix_mixColors.push(['#F22613','#D24D57'])
-
-  template_context_assetAllocationMix_assetMixDictionary['Foreign Loans + Leases'] = 0.0;
-  template_context_assetAllocationMix_mixLabels.push('Foreign Loans + Leases');
-  template_context_assetAllocationMix_mixValues.push(0.0);
-  template_context_assetAllocationMix_mixColors.push(['#87D37C','#90C695'])
-
 
 // 
 var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, animateRiskGraph, reformatYAxis) {
