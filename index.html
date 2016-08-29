@@ -1131,24 +1131,24 @@ iframe.iframecontentFLFTFY{
       <div class="panel" id="capital-to-asset-ratio-joyride">
         <div class="row">
           <div class="medium-8 columns">
-            <h5>Capital-to-Asset Ratio
-              <large>13.9%
-                <i class="fa fa-arrow-down trending"></i>
+            <h5>Uploads
+              <large><div id="upload-percent"></div>
+                <i id="upload-trend" class="fa trending"></i>
               </large>
-              <small>Current Capital-to-Asset Ratio</small>
+              <small>Per Year</small>
             </h5>
           </div>
           <div class="medium-4 columns">
             <h5 id="capitalAssetSummary">
-              <small>Total Capital:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$64,894,000.00</small>
-              <small>Total Assets:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$466,219,000.00</small>
+              <small>Total Uploads:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$64,894,000.00</small>
+              <!-- <small>Total Assets:<br></small><small class="capitalAssetSummaryNumber makeItGreen">$466,219,000.00</small> -->
             </h5>
           </div>
         </div>
         <div class="canvas-holder">
           <canvas id="canvas-capital-to-asset-ratio" height="346" width="577" style="width: 577px; height: 346px;"></canvas>
         </div>
-        <div id="chartjs-tooltip-capital-asset-ratio" class="chartjs-custom-tooltip below" style="opacity: 0; left: 275px; top: 108px; font-family: &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal;">Capital to Asset Ratio: 16.76</div>
+        <div id="chartjs-tooltip-capital-asset-ratio" class="chartjs-custom-tooltip below" style="opacity: 0; left: 275px; top: 108px; font-family: &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal;">Uploads: 16.76</div>
       </div>
     </div>
 
@@ -1308,16 +1308,58 @@ iframe.iframecontentFLFTFY{
 <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
 <script>
 
-// 
+// uploads
+var template_context_capitalAssetValues; // = [14, 16, 14, 16, 14, 16];
+var template_context_minCapitalAssetScale; // = 13.91;
+var template_context_capitalAssetScaleNumSteps; // = 10.0;
+var template_context_capitalAssetStepWidth; // = 1;
 
       SC.initialize({
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
       });
-      var user = 'phortissimo';
+      // var user = 'phortissimo';
+      var user = 'erikdfranklin';
       SC.get('/users/' + user + '/tracks').then(function(tracks) {
-        console.log('tracks');
-        console.log(tracks);
+        
+        template_context_capitalAssetValues = [0, 0, 0, 0, 0, 0];
+        template_context_minCapitalAssetScale = Infinity;
+        max = -Infinity;
+
+        // bin all the years
+        for(index in tracks) {
+          var trackDate = tracks[index].created_at;
+          var trackYear = parseInt(trackDate.split('/')[0]);
+          var binIndex = Math.max(0, trackYear-2011);
+          template_context_capitalAssetValues[binIndex] += 1;
+          if(template_context_capitalAssetValues[binIndex] < template_context_minCapitalAssetScale) {
+            template_context_minCapitalAssetScale = template_context_capitalAssetValues[binIndex];
+          }
+          if(template_context_capitalAssetValues[binIndex] > max) {
+            max = template_context_capitalAssetValues[binIndex];
+          }
+        }
+
+        // set bounds on graph
+        template_context_minCapitalAssetScale -= 2;
+        template_context_capitalAssetScaleNumSteps = 10;
+        max += 1;
+        template_context_capitalAssetStepWidth = (max - template_context_minCapitalAssetScale)/template_context_capitalAssetScaleNumSteps;
+
+        var percentIncrease = (template_context_capitalAssetValues[5] - template_context_capitalAssetValues[4]) / parseFloat(template_context_capitalAssetValues[4]) * 100;
+        $('#upload-percent').text(percentIncrease.toFixed(2) + '%');
+        if(percentIncrease < 0) {
+          $('#upload-trend').addClass('fa-arrow-down');
+        } else {
+          $('#upload-trend').addClass('fa-arrow-up');
+        }
+        console.log(percentIncrease);
+
+        // AJAX requests to generate graph
+        // TODO do this at the end of all of the data collection
+        var my_awesome_script = document.createElement('script');
+        my_awesome_script.setAttribute('src','./Stackfolio _ Bankers\' Bank _ Scorecard_files/dash-all-codekitminified.js');
+        document.head.appendChild(my_awesome_script);
       });
       SC.get('/users/' + user + '/playlists').then(function(playlists) {
         console.log('playlists');
@@ -1347,6 +1389,7 @@ iframe.iframecontentFLFTFY{
         console.log(webprofiles);
       });
 
+
 var template_context_idrssd = 408642;
 var template_context_netInterestIncomeBank = [1.0601, 0.9757, 1.0669, 1.0906, 1.0838, 1.3245];
 var template_context_nonInterestExpenseBank = [4.7466, 4.7567, 4.8683, 4.9555, 4.734, 4.6149];
@@ -1357,10 +1400,8 @@ var template_context_depositValues = [232288000.0, 207382000.0, 207457000.0, 227
 var template_context_minLoanDepositScale = 6501500.0;
 var template_context_loanDepositScaleNumSteps = 6.0;
 var template_context_loanDepositStepWidth = 56976500.0;
-var template_context_capitalAssetValues = [14.43, 16.39, 16.76, 15.54, 13.97, 13.92];
-var template_context_minCapitalAssetScale = 13.91;
-var template_context_capitalAssetScaleNumSteps = 10.0;
-var template_context_capitalAssetStepWidth = 0.286;
+
+
 var template_context_canvasDictLabelsNoSpaces = "canvas-tier-one-leverage-capital";
 var template_context_latestDate = 2016-03-31;
 var template_context_netIncomeBank = [0.8898, 0.6148, 0.5932, 0.5716, 0.543, 0.8847];
@@ -1437,7 +1478,7 @@ var template_context_assetMixDetails_mixColors = [];
 
 
 var template_context_twoDataSetsOfNull = [[null,null,null,null,null,null,],[null,null,null,null,null,null,]];
-var template_context_datesForGraphs = ['2014-12-31','2015-03-31','2015-06-30','2015-09-30','2015-12-31','2016-03-31',];
+var template_context_datesForGraphs = ['pre-2011', '2012', '2013', '2014', '2015', '2016']; //['2014-12-31','2015-03-31','2015-06-30','2015-09-30','2015-12-31','2016-03-31',];
 var template_context_comparisonConcepts = ['UBPRD486','UBPR3792','UBPRE542','UBPRE019','UBPRE018','UBPRK447','UBPRE013','UBPRE001','UBPRE005','UBPRE004','UBPRE641','UBPRE025','UBPRE599','UBPRE027','UBPRE592','UBPRE091','UBPRD486','UBPRD488','UBPRE018','UBPRE415','UBPRE542','UBPRE644','UBPR3210','UBPR3792','UBPRD487','STACK0001',];
 var template_context_noLabels = ['','','','','','',];
 
@@ -1525,9 +1566,11 @@ var template_context_assetAllocationMix_assetMixDictionary = [];
 
 // 
 var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, animateRiskGraph, reformatYAxis) {
-      
+
+        console.log("caller is ");
+        console.log(arguments.callee.caller);
         // Check if insuffient data
-        dictVals = [14.58, 14.52, 15.32, 15.72, 13.17, 13.36];
+        dictVals = [1, 2, 3, 4, 5, 6]; //14.58, 14.52, 15.32, 15.72, 13.17, 13.36];
         var allVals0 = true;
         for (var i = 0; i < dictVals.length; i++) {
           if (dictVals[i] != 0) {
@@ -1545,7 +1588,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
             noLabels,
             [
               peerGroupValuePlaceholders,
-              [14.58, 14.52, 15.32, 15.72, 13.17, 13.36]
+              [1, 2, 3, 4, 5, 6]
             ],
             twoLineGraphColors,
             ["Peer Group","Bank"]
@@ -1563,7 +1606,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
       
       
         // Check if insuffient data
-        dictVals = [4.4369, 4.2819, 6.5653, 5.6767, 4.9825, 4.2278];
+        dictVals = [6, 5, 4, 3, 2, 1];
         var allVals0 = true;
         for (var i = 0; i < dictVals.length; i++) {
           if (dictVals[i] != 0) {
@@ -1581,7 +1624,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
               noLabels,
               [
                 peerGroupValuePlaceholders,
-                [  4.4369,    4.2819,    6.5653,    5.6767,    4.9825,    4.2278,  ]
+                [6, 5, 4, 3, 2, 1]
               ],
               twoLineGraphColors,
               ["Peer Group","Bank"]
@@ -1599,7 +1642,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
       
       
         // Check if insuffient data
-        dictVals = [14.58, 14.52, 15.32, 15.72, 13.17, 13.36];
+        dictVals = [6, 5, 4, 3, 2, 1]; // 14.58, 14.52, 15.32, 15.72, 13.17, 13.36];
         var allVals0 = true;
         for (var i = 0; i < dictVals.length; i++) {
           if (dictVals[i] != 0) {
@@ -1619,7 +1662,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
             datesForGraphs,
             [
               tierOneLeverageCapitalModalPeerGroupAverages,
-              [14.58, 14.52, 15.32, 15.72, 13.17, 13.36]
+              [6, 5, 4, 3, 2, 1] //[14.58, 14.52, 15.32, 15.72, 13.17, 13.36]
             ],
             twoLineGraphColors,
             ["Peer Group","Bank"]
@@ -1673,7 +1716,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
         animateRiskGraph = false;
       
         // Check if insuffient data
-        dictVals = [4.4369, 4.2819, 6.5653, 5.6767, 4.9825, 4.2278];
+        dictVals = [6, 5, 4, 3, 2, 1];
         var allVals0 = true;
         for (var i = 0; i < dictVals.length; i++) {
           if (dictVals[i] != 0) {
@@ -1693,7 +1736,7 @@ var template_context_fn_initialRiskCard = function(peerGroupValuePlaceholders, a
             datesForGraphs,
             [
               nonPerformingLoansModalPeerGroupAverages,
-              [4.4369, 4.2819, 6.5653, 5.6767, 4.9825, 4.2278]
+              [6, 5, 4, 3, 2, 1]
             ],
             twoLineGraphColors,
             ["Peer Group","Bank"]
@@ -1926,7 +1969,7 @@ var template_context_fn_setRiskGraphsToNullForLabels = function() {
   };
 </script>
 <script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/tableExport.js"></script>
-<script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/dash-all-codekitminified.js"></script>
+<!-- <script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/dash-all-codekitminified.js"></script> -->
 <script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/signup-all-codekitminified.js"></script>
 <script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/typeahead.bundle.min.js"></script>
 <script src="./Stackfolio _ Bankers' Bank _ Scorecard_files/hogan-3.0.1.js"></script>
