@@ -1117,6 +1117,8 @@ iframe.iframecontentFLFTFY{
       <div class="panel" id="news_panel">
         <h5>Related News</h5>
         <ul id="headlines"></ul>
+        <div id="player">
+        </div>
         <!-- <div class="news-loader"><i class="fa fa-circle-o-notch fa-spin" style="display: block;"></i></div> -->
       </div>
     </div>
@@ -1277,14 +1279,13 @@ var template_context_loanDepositStepWidth;
       // var user = 'erikdfranklin';
       var user = 'shhsecretsongs';
 
+
       // === 0. user ===
       SC.get('/users/' + user).then(function(user) {
-        console.log('user');
-        console.log(user);
+        var player = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/'+user.id+'&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>';
+        $('#player').html(player);
 
-
-
-        checkSoundcloudInit()
+        checkSoundcloudInit();
       });
 
       // === 1. get tracks ===
