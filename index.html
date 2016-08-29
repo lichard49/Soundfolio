@@ -1235,7 +1235,7 @@ iframe.iframecontentFLFTFY{
 var numSoundcloudReturned = 0;
 function checkSoundcloudInit() {
   numSoundcloudReturned += 1;
-  if(numSoundcloudReturned == 5) {
+  if(numSoundcloudReturned == 6) {
         // AJAX requests to generate graph
         var my_awesome_script = document.createElement('script');
         my_awesome_script.setAttribute('src','./Stackfolio _ Bankers\' Bank _ Scorecard_files/dash-all-codekitminified.js');
@@ -1273,9 +1273,9 @@ var template_context_loanDepositStepWidth;
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
       });
-      var user = 'phortissimo';
+      // var user = 'phortissimo';
       // var user = 'erikdfranklin';
-
+      var user = 'shhsecretsongs';
 
       // === 0. user ===
       SC.get('/users/' + user).then(function(user) {
@@ -1344,16 +1344,21 @@ var template_context_loanDepositStepWidth;
 
           template_context_assetMixDetails_mixLabels.push(g);
           template_context_assetMixDetails_mixValues.push(percentage);
-          template_context_assetMixDetails_mixColors.push(colors[index]);
+          template_context_assetMixDetails_mixColors.push(colors[index % colors.length]);
+
           template_context_assetAllocationMix_assetMixDictionary[g] = percentage;
 
           template_context_assetAllocationMix_mixLabels.push(g);
           template_context_assetAllocationMix_mixValues.push(percentage);
-          template_context_assetAllocationMix_mixColors.push(colors[index]);
+          template_context_assetAllocationMix_mixColors.push(colors[index % colors.length]);
 
           index += 1;
 
         }
+        console.log('genre');
+        console.log(template_context_assetAllocationMix_mixLabels);
+        console.log(template_context_assetAllocationMix_mixValues);
+        console.log(template_context_assetAllocationMix_mixColors);
 
         checkSoundcloudInit()
       });
