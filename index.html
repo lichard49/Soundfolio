@@ -875,7 +875,7 @@ iframe.iframecontentFLFTFY{
         <div class="small-12 columns" id="main-content">
           <div class="row">
             <div class="medium-10 small-12 columns">
-              <h3><i class="fa fa-circle-o-notch fa-spin ubpr-popup-spinner" style="display: none;"></i></h3>
+              <!-- <h3><i class="fa fa-circle-o-notch fa-spin ubpr-popup-spinner" style="display: none;"></i></h3> -->
               <h3 id="table_title"><!-- Title of UBPR Page --></h3>
             </div>
             <div class="small-2 columns hide-for-small-only">
@@ -1019,17 +1019,17 @@ iframe.iframecontentFLFTFY{
 
     <div class="medium-4 large-3 columns">
       <div class="panel chart" id="loan-deposit-joyride">
-        <h5>Loan/Deposit Ratio
-          <large>33.5%
-            <i class="fa fa-arrow-up trending"></i>
+        <h5>Comment Content
+          <large><div id="comment-percentage" style="display: inline;">33.5%</div>
+            <i id="comment-trend" class="fa trending"></i>
           </large>
-          <small>Current Loan/Deposit Ratio</small>
+          <small>Usage of vowels in comments</small>
         </h5>
-        <h3 class="inset-text" id="no-loandeposit-ratio" align="center">No Loan/ Deposit Ratio Available</h3>
+        <h3 class="inset-text" id="no-loandeposit-ratio" align="center">No Comments Have Been Made</h3>
         <div class="canvas-holder">
           <canvas id="canvas-loan-deposit-ratio" height="359" width="419" style="width: 419px; height: 359px;"></canvas>
         </div>
-        <div id="chartjs-tooltip-loan-deposit-ratio" class="chartjs-custom-tooltip" style="opacity: 0; left: 142.667px; top: 299.19px; font-family: &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal;"><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(211,211,211,0.4)"></span> <span class="chartjs-tooltip-value">Loans: 63,478,000</span></div><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(90,145,192,0.5)"></span> <span class="chartjs-tooltip-value">Core Deposits: 231,288,000</span></div><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(62,175,58,0.3)"></span> <span class="chartjs-tooltip-value">Deposits: 232,288,000</span></div></div>
+        <div id="chartjs-tooltip-loan-deposit-ratio" class="chartjs-custom-tooltip" style="opacity: 0; left: 142.667px; top: 299.19px; font-family: &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal;"><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(211,211,211,0.4)"></span> <span class="chartjs-tooltip-value">Number of A's in comments: 63,478,000</span></div><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(90,145,192,0.5)"></span> <span class="chartjs-tooltip-value">Number of E's in comments: 231,288,000</span></div><div class="chartjs-tooltip-section"> <span class="chartjs-tooltip-key" style="background-color:rgba(62,175,58,0.3)"></span> <span class="chartjs-tooltip-value">Number of I's in comments: 232,288,000</span></div></div>
       </div>
     </div>
 
@@ -1117,7 +1117,7 @@ iframe.iframecontentFLFTFY{
       <div class="panel" id="news_panel">
         <h5>Related News</h5>
         <ul id="headlines"></ul>
-        <div class="news-loader"><i class="fa fa-circle-o-notch fa-spin" style="display: block;"></i></div>
+        <!-- <div class="news-loader"><i class="fa fa-circle-o-notch fa-spin" style="display: block;"></i></div> -->
       </div>
     </div>
 
@@ -1261,12 +1261,31 @@ var template_context_assetAllocationMix_mixValues = [];
 var template_context_assetAllocationMix_mixColors = [];
 var template_context_assetAllocationMix_assetMixDictionary = [];
 
+// loans
+var template_context_loanValues = [0, 0, 0, 0, 0, 0];
+var template_context_coreDepositValues = [0, 0, 0, 0, 0, 0];
+var template_context_depositValues = [0,0,0,0,0,0];
+var template_context_minLoanDepositScale;
+var template_context_loanDepositScaleNumSteps;
+var template_context_loanDepositStepWidth;
+
       SC.initialize({
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
       });
       var user = 'phortissimo';
       // var user = 'erikdfranklin';
+
+
+      // === 0. user ===
+      SC.get('/users/' + user).then(function(user) {
+        console.log('user');
+        console.log(user);
+
+
+
+        checkSoundcloudInit()
+      });
 
       // === 1. get tracks ===
       SC.get('/users/' + user + '/tracks').then(function(tracks) {
@@ -1335,12 +1354,6 @@ var template_context_assetAllocationMix_assetMixDictionary = [];
           index += 1;
 
         }
-        console.log("genres");
-        console.log(template_context_assetMixDetails_mixLabels);
-        console.log(template_context_assetMixDetails_mixValues);
-        console.log(template_context_assetMixDetails_mixColors);
-
-        console.log(tracks);
 
         checkSoundcloudInit()
       });
@@ -1369,6 +1382,44 @@ var template_context_assetAllocationMix_assetMixDictionary = [];
         console.log('comments');
         console.log(comments);
 
+        // bin comments
+        for(index in comments) {
+          var comment = comments[index];
+          var commentYear = parseInt(comment.created_at.split('/')[0]);
+          var binIndex = Math.max(0, commentYear-2011);
+          var commentText = comment.body.toLowerCase();
+          template_context_loanValues[binIndex] += commentText.split('a').length-1; // number of A's
+          template_context_coreDepositValues[binIndex] += commentText.split('e').length-1; // number of E's
+          template_context_depositValues[binIndex] += commentText.split('i').length-1; // number of I's
+        }
+
+        // get comments scale
+        template_context_minLoanDepositScale = Infinity;
+        max = -Infinity;
+        for(index in template_context_loanValues) {
+          if(template_context_loanValues[index] < template_context_minLoanDepositScale) {
+            template_context_minLoanDepositScale = template_context_loanValues[index];
+          } else if(template_context_loanValues[index] > max) {
+            max = template_context_loanValues[index];
+          }
+        }
+        template_context_minLoanDepositScale -= 0.1;
+        template_context_loanDepositScaleNumSteps = 10;
+        max += 1;
+        template_context_loanDepositStepWidth = (max - template_context_minLoanDepositScale)/template_context_loanDepositScaleNumSteps;
+        console.log(template_context_minLoanDepositScale);
+        console.log(template_context_loanDepositScaleNumSteps);
+        console.log(template_context_loanDepositStepWidth);
+
+        // calculate percent of current year
+        var percentIncrease = (template_context_loanValues[5] - template_context_loanValues[4]) / parseFloat(template_context_loanValues[4]) * 100;
+        $('#comment-percentage').text(percentIncrease.toFixed(2) + '%');
+        if(percentIncrease < 0) {
+          $('#comment-trend').addClass('fa-arrow-down');
+        } else {
+          $('#comment-trend').addClass('fa-arrow-up');
+        }
+
         checkSoundcloudInit()
       });
 
@@ -1393,15 +1444,6 @@ var template_context_idrssd = 408642;
 var template_context_netInterestIncomeBank = [1.0601, 0.9757, 1.0669, 1.0906, 1.0838, 1.3245];
 var template_context_nonInterestExpenseBank = [4.7466, 4.7567, 4.8683, 4.9555, 4.734, 4.6149];
 var template_context_nonInterestIncomeBank = [4.4117, 4.6126, 4.6868, 4.7452, 4.505, 4.6735];
-
-// loans
-var template_context_loanValues = [63478000.0, 65346000.0, 68730000.0, 76046000.0, 82353000.0, 97561000.0];
-var template_context_coreDepositValues = [231288000.0, 206882000.0, 206707000.0, 227218000.0, 278600000.0, 289884000.0];
-var template_context_depositValues = [0,0,0,0,0,0];
-var template_context_minLoanDepositScale = 6501500.0;
-var template_context_loanDepositScaleNumSteps = 6.0;
-var template_context_loanDepositStepWidth = 56976500.0;
-
 
 var template_context_canvasDictLabelsNoSpaces = "canvas-tier-one-leverage-capital";
 var template_context_latestDate = 2016-03-31;
