@@ -554,26 +554,34 @@ iframe.iframecontentFLFTFY{
     <nav class="top-bar" data-topbar="">
       <ul class="title-area">
         <li class="logo">
-          <h1><a href="http://stackfolio.com/"><img src="./Stackfolio _ Bankers' Bank _ Scorecard_files/logo-stackfolio-icon.svg"><div class="stackfolio-name">Stackfolio</div></a></h1>
+          <h1><a><img src="./Stackfolio _ Bankers' Bank _ Scorecard_files/logo-stackfolio-icon.svg"><div class="stackfolio-name">Soundfolio</div></a></h1>
         </li>
         <li class="toggle-topbar menu-icon"><a href="http://stackfolio.com/info/bankersbankusa/#"><span>Menu</span></a></li>
       </ul>
-      <form id="search-bank" action="http://stackfolio.com/banksearchredirect/" method="POST" style="display: block;">
+      <form id="search-bank" action="" method="GET" style="display: block;">
         <input type="hidden" name="csrfmiddlewaretoken" value="GOCgKdScZeU0kgnkqHGaConzqnZx9QZt">
-        <span class="twitter-typeahead" style="position: relative; display: inline-block;"><input class="place-holder-center tt-hint" type="text" readonly="" autocomplete="off" spellcheck="false" tabindex="-1" dir="ltr" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255);"><input class="place-holder-center tt-input" placeholder="Search for a bank&#39;s scorecard" type="text" id="search-box" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;"><pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: Hind, &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre><div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"><div class="tt-dataset tt-dataset-0"></div></div></span>
+        <span class="twitter-typeahead" style="position: relative; display: inline-block;">
+          <input class="place-holder-center tt-hint" type="text" readonly="" autocomplete="off" spellcheck="false" tabindex="-1" dir="ltr" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255);">
+          <input class="place-holder-center tt-input" placeholder="Search for an artist&#39;s scorecard (exact username)" type="text" id="search-box" name="search" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;">
+          <pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: Hind, &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre>
+          <div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;">
+            <div class="tt-dataset tt-dataset-0"></div>
+          </div>
+        </span>
         <input type="hidden" id="searchbar-website-domain" name="websiteDomain">
         <input type="hidden" id="searchbar-idrssd" name="idrssd">
+        <input type="submit" id="searchbar-idrssd" name="idrssd" style="display: none;">
       </form>
       
     <section class="top-bar-section">
         <ul class="right">
         
-          <li class="nav-item"><a class="manage-account-label" href="http://stackfolio.com/signup/">Sign Up</a></li>
-          <li class="nav-item active" id="nav-research"><a href="http://stackfolio.com/info/480228/">Scorecards</a></li>
-          <li class="nav-item" id="nav-marketplace"><a href="http://stackfolio.com/marketplace/">Marketplace</a></li>
+          <li class="nav-item"><a class="manage-account-label">Sign Up</a></li>
+          <li class="nav-item active" id="nav-research"><a>Scorecards</a></li>
+          <li class="nav-item" id="nav-marketplace"><a>Marketplace</a></li>
         
-          <li id="feedback-button" class="nav-item">
-            <span id="feedback-label">Contact</span>
+          <li class="nav-item">
+            <span>Contact</span>
           </li>
         </ul>
       </section></nav>
@@ -941,9 +949,9 @@ iframe.iframecontentFLFTFY{
   <div class="row full-width">
     <div id="check_if_mobile"></div>
     <div class="large-6 medium-6 small-12 columns medium-5" id="nav-bank-name-holder" style="text-align: left;">
-      <h1 id="bank-name-joyride" class="left mobile-style-header mobile_sections_spacing" style="font-size: 25px;">Bankers' Bank 
+      <h1 id="bank-name-joyride" class="left mobile-style-header mobile_sections_spacing" style="font-size: 25px;"><div id="username" style="display: inline;">Bankers' Bank</div>
       
-        <small class="description_header">Madison , WI 53717 · FDIC Certificate Number: 23537 · RSSD-ID: 408642</small>
+        <!-- <small class="description_header" id="subtitle">Madison , WI 53717 · FDIC Certificate Number: 23537 · RSSD-ID: 408642</small> -->
       
       </h1>
     </div>
@@ -1180,12 +1188,12 @@ iframe.iframecontentFLFTFY{
           </div>
           <div class="large-9 medium-8 small-8 columns">
             <ul class="inline-list right">
-              <li><a href="http://stackfolio.com/">About Us</a></li>
-              <li><a href="mailto:support@stackfolio.com?Subject=Stackfolio%20Question">Contact Us</a></li>
-              <li><a href="http://stackfolio.com/">Bank Search</a></li>
-              <li><a href="http://changelog.stackfolio.com/">Changelog</a></li>
-              <li><a href="http://stackfolio.com/termsofuse/">Terms of Use</a></li>
-              <li><a href="http://stackfolio.com/privacypolicy/">Privacy Policy</a></li>
+              <li><a>About Us</a></li>
+              <li><a>Contact Us</a></li>
+              <li><a>Bank Search</a></li>
+              <li><a>Changelog</a></li>
+              <li><a>Terms of Use</a></li>
+              <li><a>Privacy Policy</a></li>
             </ul>
           </div>
         </div>
@@ -1236,19 +1244,37 @@ var template_context_minLoanDepositScale;
 var template_context_loanDepositScaleNumSteps;
 var template_context_loanDepositStepWidth;
 
+function getParam(val) {
+    var result = "Not found",
+        tmp = [];
+    location.search
+    //.replace ( "?", "" ) 
+    // this is better, there might be a question mark inside
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === val) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+}
+
       SC.initialize({
         client_id: '9cd1cc8d87c233926bfec08d9b6401b4',
         redirect_uri: 'http://example.com/callback'
       });
       // var user = 'phortissimo';
       // var user = 'erikdfranklin';
-      var user = 'shhsecretsongs';
+      // var user = 'shhsecretsongs';
+      var user = getParam('search');
 
 
       // === 0. user ===
       SC.get('/users/' + user).then(function(user) {
         var player = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/'+user.id+'&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>';
         $('#player').html(player);
+
+        $('#username').text(user.username);
 
         checkSoundcloudInit();
       });
